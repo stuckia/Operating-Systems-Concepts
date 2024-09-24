@@ -37,28 +37,31 @@ static int get_rand(int max) {
 // Date: 9/23/2024
 // Description: Main function of process, creates maze
 static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t count, loff_t* offset) {
-    printk(KERN_INFO "Beginning maze generation.");
-
     struct Frontier maze[dim];
     int visited[dim];
     int frontier[dim];
     int added_to_frontier[dim];
     int frontier_size = 0;
+    int curr_index = 0;
     int random_num = 0;
     int frontier_index = 0;
     int temp_rand = 0;
     char finalarr[(rows * 2) + 1][(cols * 2) + 1];
     char arr_flat[((rows * 2) + 1) * ((cols * 2) + 1) + ((rows * 2) + 1)];
     int arr_length = ((rows * 2) + 1) * ((cols * 2) + 1) + ((rows * 2) + 1);
+    int index = 0;
+    int possible_frontier[4] = { 0,0,0,0 };
+    int possible_size = 0;
 
+    printk(KERN_INFO "Beginning maze generation.");
+    
     for (int x = 0; x < dim; x++) {
         visited[x] = 0;
         frontier[x] = 0;
         added_to_frontier[x] = 0;
         maze[x].direction = -1;
     }
-
-    int curr_index = 0;
+    
     // add valid neighbors to current frontier options
     do {
         visited[curr_index] = 1;
@@ -101,8 +104,8 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
         frontier_index = frontier[random_num];
 
         // find visited neighbors
-        int possible_frontier[4] = { 0,0,0,0 };
-        int possible_size = 0;
+        possible_frontier[4] = { 0,0,0,0 };
+        possible_size = 0;
 
         // add north neighbor to frontier if visited and valid
         if (frontier_index - cols >= 0 && frontier_index >= cols) {
@@ -191,7 +194,6 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
     }
 
     // final arr for printing needs to be full length plus space for \n
-    int index = 0;
     for (int r2 = 0; r2 < (rows * 2) + 1; r2++) {
         for (int c2 = 0; c2 < (cols * 2) + 1; c2++) {
             arr_flat[index] = finalarr[r2][c2];
