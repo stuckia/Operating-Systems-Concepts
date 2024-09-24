@@ -1,5 +1,7 @@
 ccflags-y := -std=gnu99
 
+CONFIG_FRAME_WARN=0
+
 CONFIG_MODULE_SIG=n
 
 obj-m += maze.o
