@@ -44,6 +44,12 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
     int frontier[dim];
     int added_to_frontier[dim];
     int frontier_size = 0;
+    int random_num = 0;
+    int frontier_index = 0;
+    int temp_rand = 0;
+    char finalarr[(rows * 2) + 1][(cols * 2) + 1];
+    char arr_flat[((rows * 2) + 1) * ((cols * 2) + 1) + ((rows * 2) + 1)];
+    int arr_length = ((rows * 2) + 1) * ((cols * 2) + 1) + ((rows * 2) + 1);
 
     for (int x = 0; x < dim; x++) {
         visited[x] = 0;
@@ -91,8 +97,8 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
         }
 
         // choose frontier cell (unvisited)
-        int random_num = get_rand(frontier_size);
-        int frontier_index = frontier[random_num];
+        random_num = get_rand(frontier_size);
+        frontier_index = frontier[random_num];
 
         // find visited neighbors
         int possible_frontier[4] = { 0,0,0,0 };
@@ -128,7 +134,7 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
         }
 
         // grab index of parent, assign direction
-        int temp_rand = get_rand(possible_size);
+        temp_rand = get_rand(possible_size);
         maze[frontier_index].direction = possible_frontier[temp_rand];
 
         // clean up and update arrays
@@ -142,7 +148,6 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
     } while (frontier_size >= 1);
 
     // print maze
-    char finalarr[(rows * 2) + 1][(cols * 2) + 1];
     for (int r = 0; r < (rows * 2) + 1; r++) {
         for (int c = 0; c < (cols * 2) + 1; c++) {
             finalarr[r][c] = '#';
@@ -186,7 +191,6 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
     }
 
     // final arr for printing needs to be full length plus space for \n
-    char arr_flat[((rows * 2) + 1) * ((cols * 2) + 1) + ((rows * 2) + 1)];
     int index = 0;
     for (int r2 = 0; r2 < (rows * 2) + 1; r2++) {
         for (int c2 = 0; c2 < (cols * 2) + 1; c2++) {
@@ -201,8 +205,6 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
     }
 
     // load array into user buffer
-    int arr_length = strlen(arr_flat);
-
     if (*offset > 0) {
         return 0;
     }
