@@ -11,9 +11,9 @@ MODULE_AUTHOR("Abby Stucki");
 MODULE_DESCRIPTION("Raptor Maze generator");
 MODULE_LICENSE("GPL");
 
-#define rows 15
-#define cols 15
-#define dim 225
+#define rows 10
+#define cols 10
+#define dim 100
 
 typedef struct Frontier {
     // 0=north, 1=south, 2=east, 3=west
