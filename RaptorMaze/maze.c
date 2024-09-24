@@ -186,7 +186,7 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
     }
 
     // final arr for printing needs to be full length plus space for \n
-    char arr_flat[([(rows * 2) + 1]) * ([(cols * 2) + 1]) + ([(rows * 2) + 1])];
+    char arr_flat[((rows * 2) + 1) * ((cols * 2) + 1) + ((rows * 2) + 1)];
     int index = 0;
     for (int r2 = 0; r2 < (rows * 2) + 1; r2++) {
         for (int c2 = 0; c2 < (cols * 2) + 1; c2++) {
