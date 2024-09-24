@@ -104,7 +104,7 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
         frontier_index = frontier[random_num];
 
         // find visited neighbors
-        possible_frontier[4] = { 0,0,0,0 };
+        possible_frontier = { 0,0,0,0 };
         possible_size = 0;
 
         // add north neighbor to frontier if visited and valid
