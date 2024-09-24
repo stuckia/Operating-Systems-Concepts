@@ -219,7 +219,7 @@ static ssize_t create_maze(struct file* file, char __user* user_buffer, size_t c
 static struct file_operations fops =
 {
     .owner = THIS_MODULE,
-    .maze = create_maze
+    .read = create_maze
 };
 
 // Name: Abby
