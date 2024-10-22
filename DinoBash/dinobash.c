@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <string.h>
 #include <time.h>
 #include <linux/limits.h>
@@ -16,7 +17,7 @@ void motd() {
     time (&t);
 
     // print msg and date/time
-    clrscr();
+    system("clear");
     printf("\x1b[34mProgram running at %s\x1b[0m\n", ctime(&t));
     printf("\x1b[34mHope you are having a fantastic day!\x1b[0m\n");
 }
