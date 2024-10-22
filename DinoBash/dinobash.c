@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.d>
+#include <unistd.h>
 #include <sys/types.h>
 #include <string.h>
 #include <time.h>
@@ -24,18 +24,18 @@ void motd() {
 // Name: Abby
 // Date: 10/21/2024
 // Description: Change active directory
-void change_dir(char* user_cmd) {
+void change_dir(char* cmd) {
     // store path of home variable
     char* home = getenv("HOME");
 
     // reroute to home directory if user only input "cd"
-    if(strcmp(command, "cd") == 0) {
+    if(strcmp(cmd, "cd") == 0) {
         chdir(home);
         return;
     }
 
     // pointer to start of path
-    char* user = user_cmd + 3;
+    char* user = cmd + 3;
 
     // handle directory location issues
     if(chdir(user) != 0) {
@@ -80,7 +80,7 @@ void exec_user_cmd(char* cmd, int daemon) {
     // check for output redirection
     if(strstr(cmd, ">") != NULL) {
         // tokenize the cmd string
-        out_file = strtok(command, ">");
+        out_file = strtok(cmd, ">");
         out_file = strtok(NULL, " ");
 
         // retrieve file name if present
@@ -127,7 +127,7 @@ void exec_user_cmd(char* cmd, int daemon) {
         // execute user command
         char* args[] = {"/bin/sh", "-c", cmd, NULL};
         if(execvp(args[0], args) == -1) {
-            printf("Execution failed")
+            printf("Execution failed");
         }
         exit(EXIT_FAILURE);
     }

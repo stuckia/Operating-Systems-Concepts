@@ -1,7 +1,7 @@
-BINARY = custom_shell
+BINARY = dinobash_shell
 TARGET = $(BINARY)
 CC = gcc
-CFLAGS = -Wall -gcc
+CFLAGS = -Wall -g
 
 SRC = dinobash.c
 
