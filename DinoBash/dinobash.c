@@ -165,7 +165,7 @@ int main() {
 
         // properly execute user command
         if(strcmp(user_in, "exit") == 0) {
-            printf("Program shutting down");
+            printf("Program shutting down\n");
             break;
         }
         else if(strncmp(user_in, "cd", 2) == 0) {
