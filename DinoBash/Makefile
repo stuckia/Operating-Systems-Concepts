@@ -6,6 +6,7 @@ CFLAGS = -Wall -g
 SRC = dinobash.c
 
 all: $(TARGET)
+
 $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
 

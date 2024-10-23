@@ -24,6 +24,18 @@ void motd() {
 
 // Name: Abby
 // Date: 10/21/2024
+// Description: Print current working directory
+void print_cwd() {
+    // get current working directory
+    char cwd[PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
+
+    // print current working directory
+    printf("\x1b[1;34m%s>\x1b[0m", cwd);
+}
+
+// Name: Abby
+// Date: 10/21/2024
 // Description: Change active directory
 void change_dir(char* cmd) {
     // store path of home variable
@@ -42,18 +54,6 @@ void change_dir(char* cmd) {
     if(chdir(user) != 0) {
         printf("\x1B[31mDirectory unavailable\x1B[0m\n");
     }
-}
-
-// Name: Abby
-// Date: 10/21/2024
-// Description: Print current working directory
-void print_cwd() {
-    // get current working directory
-    char cwd[PATH_MAX];
-    getcwd(cwd, sizeof(cwd));
-
-    // print current working directory
-    printf("\x1b[1;34m%s>\x1b[0m", cwd);
 }
 
 // Name: Abby
@@ -149,6 +149,7 @@ int main() {
     // execute "message of the day" on start
     motd();
 
+    // allow buffer space
     char user_in[512];
     while(1) {
         // print current working directory
