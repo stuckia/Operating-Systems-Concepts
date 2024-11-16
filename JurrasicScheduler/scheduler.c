@@ -125,7 +125,7 @@ void srtf_scheduler(int n, Process procs[]) {
 
         for(int i=0; i<n; i++) {
             if((procs[i].remaining > 0) && (procs[i].arrival <= cycle)) {
-                if((procs[i].remaining < shortest->remaining) || (shortest == NULL)) {
+                if((shortest == NULL) || (procs[i].remaining < shortest->remaining)) {
                     index = i;
                     shortest = &procs[i];
                 }
