@@ -121,8 +121,6 @@ void srtf_scheduler(int n, Process procs[]) {
         int index = -1;
         Process* shortest = NULL;
 
-        printf("TESTING");
-
         for(int i=0; i<n; i++) {
             if((procs[i].remaining > 0) && (procs[i].arrival <= cycle)) {
                 if((shortest == NULL) || (procs[i].remaining < shortest->remaining)) {
