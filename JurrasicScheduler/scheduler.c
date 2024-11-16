@@ -43,8 +43,8 @@ void print_vars(int n, Process procs[], int proc_complete) {
 
     avg_wait = avg_wait / n;
     avg_response = avg_response / n;
-    printf("\nAverage wait time: %d\n", avg_wait);
-    printf("Average response time: %d\n", avg_response);
+    printf("\nAverage wait time: %.2f\n", avg_wait);
+    printf("Average response time: %.2f\n", avg_response);
     printf("Throughput over 10 cycles: %d\n", proc_complete);
 }
 

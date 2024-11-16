@@ -1,11 +1,15 @@
+CC = gcc
+CFLAGS = -g -o
+RM = rm -f
+
 jurassic_scheduler: scheduler.c
-	gcc -g -o jurassic_scheduler scheduler.c
+	$(CC) $(CFLAGS) jurassic_scheduler scheduler.c
 
 install: jurassic_shell
 	sudo cp jurassic_scheduler /bin/
 
 uninstall:
-	sudo rm -rf /bin/jurassic_scheduler
+	sudo $(RM) /bin/jurassic_scheduler
 
 clean:
-	rm -rf jurassic_scheduler
+	$(RM) jurassic_scheduler
