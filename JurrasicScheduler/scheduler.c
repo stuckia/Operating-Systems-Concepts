@@ -19,7 +19,7 @@ typedef struct {
 // Description: Initialize/reset process fields
 void reset_procs(int n, Process procs[]) {
     for(int i=0; i<n; i++) {
-        memset(procs[i].proc_chart,"\0",sizeof(procs[i].proc_chart));
+        memset(procs[i].proc_chart,'\0',sizeof(procs[i].proc_chart));
         procs[i].start = 0;
         procs[i].finish = 0;
         procs[i].wait = 0;
