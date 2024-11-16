@@ -167,7 +167,7 @@ void srtf_scheduler(int n, Process procs[]) {
     }
 
     print_vars(n, procs, proc_complete);
-    reset_procs;
+    reset_procs(n, procs);
 }
 
 // Name: Abby Stucki
