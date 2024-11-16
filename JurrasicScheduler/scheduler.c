@@ -1,119 +1,286 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
-void fifo_scheduler(int n, char processes[][10], int burst[], int arrival[]) {
-    // order by arrival time, bubble sort
-    bool swap;
-    for(int i=0; i<n-1; i++) {
-        swap = false;
-        for(int j=0; j<n-1; j++) {
-            if(arrival[j] > arrival[j+1]) {
-                int temp_i = arrival[j];
-                arrival[j] = arrival[j+1];
-                arrival[j+1] = temp_i;
+typedef struct {
+    char proc_name[32];     // hold process name
+    char proc_chart[256];   // hold output chart for process
+    int burst;              // burst time
+    int arrival;            // arrival time
+    int start;              // start time
+    int finish;             // finish time
+    int wait;               // waiting time
+    int remaining;          // remaining time
+    int response;           // response time
+} Process;
 
-                temp_i = burst[j];
-                burst[j] = burst[j+1];
-                burst[j+1] = temp_i;
+// Name: Abby Stucki
+// Date: 11/10/2024
+// Description: Initialize/reset process fields
+void reset_procs(int n, Process procs[]) {
+    for(int i=0; i<n; i++) {
+        strcpy(procs[i].proc_chart,"");
+        procs[i].start = 0;
+        procs[i].finish = 0;
+        procs[i].wait = 0;
+        procs[i].remaining = 0;
+        procs[i].response = 0;
+    }
+}
 
-                for(int k=0; k<10; ++k) {
-                    char temp = processes[j][k];
-                    processes[j][k] = processes[j+1][k];
-                    processes[j+1][k] = temp;
+// Name: Abby Stucki
+// Date: 11/10/2024
+// Description: Print fields for analysis
+void print_vars(int n, Process procs[], int proc_complete) {
+    float avg_wait = 0.0;
+    float avg_response = 0.0;
+    
+    for(int i=0; i<n; i++) {
+        printf("\n%s\t%s", procs[i].proc_name, procs[i].proc_chart);
+        avg_wait += (float) procs[i].wait;
+        avg_response += (float) procs[i].response;
+    }
+
+    avg_wait = avg_wait / n;
+    avg_response = avg_response / n;
+    printf("\nAverage wait time: %d\n", avg_wait);
+    printf("Average response time: %d\n", avg_response);
+    printf("Throughput over 10 cycles: %d\n", proc_complete);
+}
+
+// Name: Abby Stucki
+// Date: 11/12/2024
+// Description: Return last index of process chart
+int get_last_index(Process* proc) {
+    int i=0;
+    while(proc->proc_chart[i] != '\0') {
+        i++;
+    }
+    return i;
+}
+
+// Name: Abby Stucki
+// Date: 11/10/2024
+// Description: FIFO scheduling
+void fifo_scheduler(int n, Process procs[]) {
+    int cycle = 0;
+    int proc_complete = 0;
+    
+    printf("FIFO Scheduling: \n");
+
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<1; j++) {
+            procs[i].wait += procs[j].burst;
+        }
+
+        procs[i].wait -= procs[i].burst;
+        procs[i].response = procs[i].wait;
+        cycle += procs[i].burst;
+
+        if(cycle <= 10) {
+            proc_complete++;
+        }
+    }
+
+    // create chart depiction of process timeline
+    for(int i=0; i<n; i++) {
+        cycle = 0;
+        for(int j=0; j<=i; j++) {
+            for(int k=0; k<procs[j].burst; k++) {
+                if(j==i) {
+                    procs[i].proc_chart[cycle] = '#';
                 }
-                
-                swap = true;
+                else if(procs[i].arrival <= cycle) {
+                    procs[i].proc_chart[cycle] = '_';
+                }
+                else {
+                    procs[i].proc_chart[cycle] = ' ';
+                }
+                cycle++;
             }
         }
+    }
 
-        if(swap == false) {
-            break;
-        }
-    }
-    
-    // calculate completion[], turnaround[], wait[], response[]
-    int completion[n];
-    int turnaround[n];
-    int wait[n];
-    int response[n];
-    for(int i=0; i<n; i++) {
-        if(i==0) {
-            completion[0] = burst[0] + arrival[0];
-        }
-        else {
-            int max = (((completion[i-1]) > (arrival[i])) ? (completion[i-1]) : (arrival[i]));
-            completion[i] = max + burst[i];
-        }
-        turnaround[i] = completion[i] - arrival[i];
-        wait[i] = turnaround[i] - burst[i];
-        response[i] = wait[i];
-        printf("\nProcess   : %s\n", processes[i]);
-        printf("Waiting   : %d\n", wait[i]);
-        printf("Turnaround: %d\n", turnaround[i]);
-        printf("Completion: %d\n", completion[i]);
-    }
-    
-    // print results in chart
-    char chart[n][completion[n-1]];
-    for(int i=0; i<n; i++) {
-        if(processes[i][0] == '\0') {
-            continue;
-        }
-        
-        printf("\n%s\t", processes[i]);
-        
-        // use '#' for running, '_' for waiting
-        for(int j=0; j<completion[n-1]; j++) {
-            if(j >= response[i] + arrival[i] && j < completion[i]) {
-                chart[i][j] = '#';
-                printf("#");
-            }
-            else if(j < completion[i]) {
-                chart[i][j] = '_';
-                printf("_");
-            }
-            else {
-                chart[i][j] = ' ';
-                printf(" ");
-            }
-        }
-    }
+    print_vars(n, procs, proc_complete);
+    reset_procs(n, procs);
 }
 
-void print_stats() {
-    // use '#' for running, '_' for waiting
+// Name: Abby Stucki
+// Date: 11/12/2024
+// Description: SJF scheduling with preemption
+void srtf_scheduler(int n, Process procs[]) {
+    int cycle = 0;
+    int proc_complete = 0;
+    int total_proc_complete = 0;
 
-    // calculate average waiting time
+    printf("SRTF Scheduling: \n");
 
-    // calculate average response time
+    while(total_proc_complete < n) {
+        int index = 0;
+        Process* shortest = NULL;
 
-    // calculate throughput over 10 cycles
+        for(int i=1; i<n; i++) {
+            if((procs[i].remaining > 0) && (procs[i].arrival < cycle)) {
+                if((procs[i].remaining < shortest->remaining) || (shortest == NULL)) {
+                    index = i;
+                    shortest = & procs[index];
+                }
+            }
+        }
 
-    // print calculations below chart
+        if(shortest) {
+            if(shortest->burst == shortest->remaining) {
+                shortest->start = cycle;
+                shortest->response = cycle - (shortest->arrival);
+            }
+
+            shortest->remaining--;
+            shortest->proc_chart[get_last_index(shortest)] = '#';
+
+            if(shortest->remaining == 0) {
+                total_proc_complete++;
+                if(cycle <= 10) {
+                    proc_complete++;
+                }
+            }
+        }
+        
+        for(int i=0; i<n; i++) {
+            if(index != i) {
+                if(procs[i].arrival > cycle) {
+                    procs[i].proc_chart[get_last_index(&procs[i])] = ' ';
+                }
+                else if(procs[i].remaining > 0) {
+                    procs[i].proc_chart[get_last_index(&procs[i])] = '_';
+                    if(procs[i].remaining > 0) {
+                        procs[i].wait++;
+                    }
+                }
+            }
+        }
+
+        cycle++;
+    }
+
+    print_vars(n, procs, proc_complete);
+    reset_procs;
 }
 
+// Name: Abby Stucki
+// Date: 11/15/2024
+// Description: Round-robin scheduling with q=1
+void rr_scheduler(int n, Process procs[]) {
+    Process* queue[5];
+    bool started[5] = {false};
+    int cycle = 0;
+    int proc_complete = 0;
+    int total_proc_complete = 0;
+    int procs_started = 0;
+    int index = 0;
+    int end = 0;
+    int queue_size = 0;
+
+    printf("Round Robin Scheduling: \n");
+
+    Process* curr_proc = NULL;
+    while(total_proc_complete < n) {
+        if(procs_started < n) {
+            for(int i=0; i<n; i++) {
+                if((procs[i].arrival <= cycle) && (!started[i])) {
+                    queue[end] = &procs[i];
+                    end = (end + 1) % n;
+                    procs_started++;
+                    started[i] = true;
+                    queue_size++;
+                }
+                else if(!started[i]) {
+                    procs[i].proc_chart[get_last_index(&procs[i])] = ' ';
+                }
+            }
+        }
+
+        if(curr_proc && curr_proc->remaining > 0) {
+            queue[end] = curr_proc;
+            end = (end + 1) % n;
+            queue_size++;
+        }
+
+        if(queue_size > 0) {
+            curr_proc = queue[index];
+            index = (index + 1) % n;
+            queue_size--;
+
+            if(curr_proc->remaining == curr_proc->burst) {
+                curr_proc->start = cycle;
+                curr_proc->response = cycle - curr_proc->arrival;
+            }
+
+            curr_proc->remaining--;
+            curr_proc->proc_chart[get_last_index(curr_proc)] = '#';
+
+            if(curr_proc->remaining == 0) {
+                total_proc_complete++;
+                if(cycle <= 10) {
+                    proc_complete++;
+                }
+            }
+
+            for(int k=index; k != end; k = (k+1) % n) {
+                queue[k]->proc_chart[get_last_index(queue[k])] = '_';
+                queue[k]->wait++;
+            }
+        }
+
+        cycle++;
+    }
+
+    print_vars(n, procs, proc_complete);
+    reset_procs(n, procs);
+}
+
+// Name: Abby Stucki
+// Date: 11/10/2024
+// Description: Read from file, begin the scheduler
 int main() {
-    // read in file
-    // store contents
+    int n = 0;
+    Process procs[5];
+
+    // open file, ensure file is valid
+    FILE *proc_file = fopen("processes.txt", "r");
+    if(proc_file == NULL) {
+        printf("File cannot be opened.");
+        return 1;
+    }
+
+    // retrieve data from process file
     // <name>   <burst (int)>   <arrival (int)>
+    while(fscanf(proc_file, "%s %d %d", procs[n].proc_name, &procs[n].burst, &procs[n].arrival)==3) {
+        n++;
+    }
+    fclose(proc_file);
 
-    char processes[4][10] = {"Mouse", "Paint", "NN   ", "Word "};
-    int burst[4] = {3, 2, 15, 8};
-    int arrival[4] = {1, 2, 0, 4};
+    reset_procs(n, procs);
 
-    for(int i=0; i<4; i++) {
-        if(processes[i][0] == '\0') {
-            continue;
+    // bubble sort processes
+    Process temp;
+    for(int i=0; i<n-1; i++) {
+        for(int j=0; j<n-1; j++) {
+            if(procs[j].arrival > procs[j+1].arrival) {
+                temp = procs[j];
+                procs[j] = procs[j+1];
+                procs[j+1] = temp;
+            }
         }
-        printf("%s\t%d\t%d\n", processes[i], burst[i], arrival[i]);
     }
 
     // FIFO scheduling
-    fifo_scheduler(4, processes, burst, arrival);
+    fifo_scheduler(n, procs);
 
     // SJF scheduling
+    srtf_scheduler(n, procs);
 
     // round-robin scheduling (Q=1)
+    rr_scheduler(n, procs);
 
     return 0;
 }
