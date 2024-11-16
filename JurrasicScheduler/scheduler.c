@@ -40,7 +40,7 @@ void print_vars(int n, Process procs[], int proc_complete) {
     for(int i=0; i<n; i++) {
         printf("\n%-10s: ", procs[i].proc_name);
         for(int j=0; j<get_last_index(&procs[i]); j++) {
-            printf("%s", procs[i].proc_chart[j]);
+            printf("%c", procs[i].proc_chart[j]);
         }
         total_wait += procs[i].wait;
         total_response += procs[i].response;
