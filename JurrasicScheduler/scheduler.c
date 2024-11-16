@@ -32,17 +32,19 @@ void reset_procs(int n, Process procs[]) {
 // Date: 11/10/2024
 // Description: Print fields for analysis
 void print_vars(int n, Process procs[], int proc_complete) {
+    int total_wait = 0;
+    int total_response = 0;
     float avg_wait = 0.0;
     float avg_response = 0.0;
     
     for(int i=0; i<n; i++) {
-        printf("\n%s\t%s", procs[i].proc_name, procs[i].proc_chart);
-        avg_wait += (float) procs[i].wait;
-        avg_response += (float) procs[i].response;
+        printf("%s\t%s\n", procs[i].proc_name, procs[i].proc_chart);
+        total_wait += procs[i].wait;
+        total_response += procs[i].response;
     }
 
-    avg_wait = avg_wait / n;
-    avg_response = avg_response / n;
+    avg_wait = (float)total_wait / n;
+    avg_response = (float)total_response / n;
     printf("\nAverage wait time: %.2f\n", avg_wait);
     printf("Average response time: %.2f\n", avg_response);
     printf("Throughput over 10 cycles: %d\n", proc_complete);
@@ -66,7 +68,7 @@ void fifo_scheduler(int n, Process procs[]) {
     int cycle = 0;
     int proc_complete = 0;
     
-    printf("FIFO Scheduling: \n");
+    printf("\nFIFO Scheduling:");
 
     for(int i=0; i<n; i++) {
         for(int j=0; j<1; j++) {
@@ -90,7 +92,7 @@ void fifo_scheduler(int n, Process procs[]) {
                 if(j==i) {
                     procs[i].proc_chart[cycle] = '#';
                 }
-                else if(procs[i].arrival <= cycle) {
+                else if(cycle >= procs[i].arrival) {
                     procs[i].proc_chart[cycle] = '_';
                 }
                 else {
@@ -113,7 +115,7 @@ void srtf_scheduler(int n, Process procs[]) {
     int proc_complete = 0;
     int total_proc_complete = 0;
 
-    printf("SRTF Scheduling: \n");
+    printf("\nSRTF Scheduling:");
 
     while(total_proc_complete < n) {
         int index = 0;
@@ -180,7 +182,7 @@ void rr_scheduler(int n, Process procs[]) {
     int end = 0;
     int queue_size = 0;
 
-    printf("Round Robin Scheduling: \n");
+    printf("\nRound Robin Scheduling:");
 
     Process* curr_proc = NULL;
     while(total_proc_complete < n) {
