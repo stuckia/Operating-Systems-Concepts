@@ -118,14 +118,14 @@ void srtf_scheduler(int n, Process procs[]) {
     printf("\nSRTF Scheduling:\n");
 
     while(total_proc_complete < n) {
-        int index = 0;
+        int index = -1;
         Process* shortest = NULL;
 
         for(int i=1; i<n; i++) {
             if((procs[i].remaining > 0) && (procs[i].arrival < cycle)) {
                 if((procs[i].remaining < shortest->remaining) || (shortest == NULL)) {
                     index = i;
-                    shortest = & procs[index];
+                    shortest = &procs[i];
                 }
             }
         }
