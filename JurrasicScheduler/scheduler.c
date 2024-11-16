@@ -38,7 +38,10 @@ void print_vars(int n, Process procs[], int proc_complete) {
     float avg_response = 0.0;
     
     for(int i=0; i<n; i++) {
-        printf("%s\t%s\n", procs[i].proc_name, procs[i].proc_chart);
+        printf("\n%-10s: ", procs[i].proc_name);
+        for(int j=0; j<get_last_index(&procs[i]); j++) {
+            printf("%s", procs[i].proc_chart[j]);
+        }
         total_wait += procs[i].wait;
         total_response += procs[i].response;
     }
@@ -68,7 +71,7 @@ void fifo_scheduler(int n, Process procs[]) {
     int cycle = 0;
     int proc_complete = 0;
     
-    printf("\nFIFO Scheduling:");
+    printf("\nFIFO Scheduling:\n");
 
     for(int i=0; i<n; i++) {
         for(int j=0; j<1; j++) {
@@ -115,7 +118,7 @@ void srtf_scheduler(int n, Process procs[]) {
     int proc_complete = 0;
     int total_proc_complete = 0;
 
-    printf("\nSRTF Scheduling:");
+    printf("\nSRTF Scheduling:\n");
 
     while(total_proc_complete < n) {
         int index = 0;
@@ -182,7 +185,7 @@ void rr_scheduler(int n, Process procs[]) {
     int end = 0;
     int queue_size = 0;
 
-    printf("\nRound Robin Scheduling:");
+    printf("\nRound Robin Scheduling:\n");
 
     Process* curr_proc = NULL;
     while(total_proc_complete < n) {
