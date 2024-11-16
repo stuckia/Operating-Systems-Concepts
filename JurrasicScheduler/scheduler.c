@@ -29,6 +29,17 @@ void reset_procs(int n, Process procs[]) {
 }
 
 // Name: Abby Stucki
+// Date: 11/12/2024
+// Description: Return last index of process chart
+int get_last_index(Process* proc) {
+    int i=0;
+    while(proc->proc_chart[i] != '\0') {
+        i++;
+    }
+    return i;
+}
+
+// Name: Abby Stucki
 // Date: 11/10/2024
 // Description: Print fields for analysis
 void print_vars(int n, Process procs[], int proc_complete) {
@@ -51,17 +62,6 @@ void print_vars(int n, Process procs[], int proc_complete) {
     printf("\nAverage wait time: %.2f\n", avg_wait);
     printf("Average response time: %.2f\n", avg_response);
     printf("Throughput over 10 cycles: %d\n", proc_complete);
-}
-
-// Name: Abby Stucki
-// Date: 11/12/2024
-// Description: Return last index of process chart
-int get_last_index(Process* proc) {
-    int i=0;
-    while(proc->proc_chart[i] != '\0') {
-        i++;
-    }
-    return i;
 }
 
 // Name: Abby Stucki
