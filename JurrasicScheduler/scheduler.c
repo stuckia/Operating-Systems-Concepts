@@ -32,11 +32,11 @@ void reset_procs(int n, Process procs[]) {
 // Date: 11/12/2024
 // Description: Return last index of process chart
 int get_last_index(Process* proc) {
-    int i=0;
-    while(proc->proc_chart[i] != '\0') {
-        i++;
+    int c=0;
+    while(proc->proc_chart[c] != '\0') {
+        c++;
     }
-    return i;
+    return c;
 }
 
 // Name: Abby Stucki
@@ -79,7 +79,7 @@ void fifo_scheduler(int n, Process procs[]) {
         procs[i].response = procs[i].wait;
         cycle += procs[i].burst;
 
-        if(cycle <= 10) {
+        if(cycle < 10) {
             proc_complete++;
         }
     }
@@ -125,6 +125,7 @@ void srtf_scheduler(int n, Process procs[]) {
             if((procs[i].remaining > 0) && (procs[i].arrival <= cycle)) {
                 if((procs[i].remaining < shortest->remaining) || (shortest == NULL)) {
                     index = i;
+                    printf("\nTESTING!");
                     shortest = &procs[i];
                 }
             }
@@ -141,7 +142,7 @@ void srtf_scheduler(int n, Process procs[]) {
 
             if(shortest->remaining == 0) {
                 total_proc_complete++;
-                if(cycle <= 10) {
+                if(cycle < 10) {
                     proc_complete++;
                 }
             }
@@ -222,7 +223,7 @@ void rr_scheduler(int n, Process procs[]) {
 
             if(curr_proc->remaining == 0) {
                 total_proc_complete++;
-                if(cycle <= 10) {
+                if(cycle < 10) {
                     proc_complete++;
                 }
             }
