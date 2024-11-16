@@ -121,7 +121,7 @@ void srtf_scheduler(int n, Process procs[]) {
         int index = -1;
         Process* shortest = NULL;
 
-        for(int i=1; i<n; i++) {
+        for(int i=0; i<n; i++) {
             if((procs[i].remaining > 0) && (procs[i].arrival <= cycle)) {
                 if((procs[i].remaining < shortest->remaining) || (shortest == NULL)) {
                     index = i;
@@ -137,7 +137,6 @@ void srtf_scheduler(int n, Process procs[]) {
             }
 
             shortest->remaining--;
-            printf("\n%s", shortest->proc_chart);
             shortest->proc_chart[get_last_index(shortest)] = '#';
 
             if(shortest->remaining == 0) {
