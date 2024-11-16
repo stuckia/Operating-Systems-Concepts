@@ -71,7 +71,7 @@ void fifo_scheduler(int n, Process procs[]) {
     printf("\nFIFO Scheduling:\n");
 
     for(int i=0; i<n; i++) {
-        for(int j=0; j<1; j++) {
+        for(int j=0; j<i; j++) {
             procs[i].wait += procs[j].burst;
         }
 
