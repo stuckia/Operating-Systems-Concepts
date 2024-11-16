@@ -75,7 +75,7 @@ void fifo_scheduler(int n, Process procs[]) {
             procs[i].wait += procs[j].burst;
         }
 
-        procs[i].wait -= procs[i].burst;
+        procs[i].wait -= procs[i].arrival;
         procs[i].response = procs[i].wait;
         cycle += procs[i].burst;
 
