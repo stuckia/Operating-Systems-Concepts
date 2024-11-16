@@ -19,11 +19,11 @@ typedef struct {
 // Description: Initialize/reset process fields
 void reset_procs(int n, Process procs[]) {
     for(int i=0; i<n; i++) {
-        strcpy(procs[i].proc_chart,"");
+        memset(procs[i].proc_chart,"\0",sizeof(procs[i].proc_chart));
         procs[i].start = 0;
         procs[i].finish = 0;
         procs[i].wait = 0;
-        procs[i].remaining = 0;
+        procs[i].remaining = procs[i].burst;
         procs[i].response = 0;
     }
 }
@@ -49,10 +49,7 @@ void print_vars(int n, Process procs[], int proc_complete) {
     float avg_response = 0.0;
     
     for(int i=0; i<n; i++) {
-        printf("\n%-10s: ", procs[i].proc_name);
-        for(int j=0; j<get_last_index(&procs[i]); j++) {
-            printf("%c", procs[i].proc_chart[j]);
-        }
+        printf("\n%-10s: %s", procs[i].proc_name, procs[i].proc_chart);
         total_wait += procs[i].wait;
         total_response += procs[i].response;
     }
