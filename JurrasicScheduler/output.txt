@@ -1,0 +1,38 @@
+Script started on Sat 16 Nov 2024 12:34:29 PM MST
+osc@ubuntu:~/Operating-Systems-Concepts/JurrasicScheduler$ make -f Makefile
+gcc -g -o jurassic_scheduler scheduler.c
+osc@ubuntu:~/Operating-Systems-Concepts/JurrasicScheduler$ ./jurassic_scheduler 
+
+FIFO Scheduling:
+
+Clock     : ###
+Map       :  __##########
+Mouse     :   ___________###
+Key       :   ______________#####
+Average wait time: 6.75
+Average response time: 6.75
+Throughput over 10 cycles: 1
+
+SRTF Scheduling:
+
+Clock     : ###
+Map       :  __________##########
+Mouse     :   _###
+Key       :   ____#####
+Average wait time: 3.75
+Average response time: 3.75
+Throughput over 10 cycles: 2
+
+Round Robin Scheduling:
+
+Clock     : #_#___#
+Map       :  #___#___#__#_#_#####
+Mouse     :   _#___#__#
+Key       :   __#___#__#_#_#
+Average wait time: 7.25
+Average response time: 0.75
+Throughput over 10 cycles: 1
+osc@ubuntu:~/Operating-Systems-Concepts/JurrasicScheduler$ exit
+exit
+
+Script done on Sat 16 Nov 2024 12:34:44 PM MST
