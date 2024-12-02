@@ -24,15 +24,15 @@ static int get_rand(int max) {
 // Name: Abby Stucki
 // Date: 12/2/2024
 // Description: Pthreads wait for semaphore then subtract from 'work' field
-void* simple_pthread(thread_args args) {
-    printf("\nThread started... id=%c, work=%d", args.id, args.work);
-    while(args.work != 0) {
+void* simple_pthread(void* args) {
+    printf("\nThread started... id=%c, work=%d", ((struct s_thread_args*)args)->id, ((struct s_thread_args*)args)->work);
+    while(((struct s_thread_args*)args)->work != 0) {
         sem_wait(&mutex);
-        args.work--;
-        printf("\nid=%c, work=%d", args.id, args.work);
+        ((struct s_thread_args*)args)->work--;
+        printf("\nid=%c, work=%d", ((struct s_thread_args*)args)->id, ((struct s_thread_args*)args)->work);
         sem_post(&mutex);
     }
-    printf("\nThread ended... id=%c", args.id);
+    printf("\nThread ended... id=%c", ((struct s_thread_args*)args)->id);
 }
 
 
@@ -43,17 +43,27 @@ int main() {
     sem_init(&mutex, 0, 1);
     pthread_t tA, tB, tC, tD, tE;
 
-    thread_args tA_args = {'A', 10};
-    thread_args tB_args = {'B', 10};
-    thread_args tC_args = {'C', 10};
-    thread_args tD_args = {'D', 10};
-    thread_args tE_args = {'E', 10};
+    struct s_thread_args *tA_args;
+    tA_args->id = 'A';
+    tA_args->work = 10;
+    struct s_thread_args *tB_args;
+    tB_args->id = 'B';
+    tB_args->work = 10;
+    struct s_thread_args *tC_args;
+    tC_args->id = 'C';
+    tC_args->work = 10;
+    struct s_thread_args *tD_args;
+    tD_args->id = 'D';
+    tD_args->work = 10;
+    struct s_thread_args *tE_args;
+    tE_args->id = 'E';
+    tE_args->work = 10;
 
-    pthread_create(&tA, NULL, simple_pthread, tA_args);
-    pthread_create(&tB, NULL, simple_pthread, tB_args);
-    pthread_create(&tC, NULL, simple_pthread, tC_args);
-    pthread_create(&tD, NULL, simple_pthread, tD_args);
-    pthread_create(&tE, NULL, simple_pthread, tE_args);
+    pthread_create(&tA, NULL, simple_pthread, (void *)tA_args);
+    pthread_create(&tB, NULL, simple_pthread, (void *)tB_args);
+    pthread_create(&tC, NULL, simple_pthread, (void *)tC_args);
+    pthread_create(&tD, NULL, simple_pthread, (void *)tD_args);
+    pthread_create(&tE, NULL, simple_pthread, (void *)tE_args);
 
     pthread_join(tA, NULL);
     pthread_join(tB, NULL);
