@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -pthread -o
+CFLAGS = -Wall -g -pthread -o -fsanitize=address
 RM = rm -f
 
 workload_balancer: balancer.c
