@@ -2,7 +2,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <unistd.h>
-#include <linux/random.h>
+#include <sys/random.h>
 
 sem_t mutex;
 
@@ -16,7 +16,7 @@ typedef struct s_thread_args {
 // Description: Generate random number within range of 0 to max
 static int get_rand(int max) {
     int i, rand_num;
-    get_random_bytes(&i, sizeof(i));
+    getrandom(&i, sizeof(i), 0);
     rand_num = i % max;
     return ((rand_num >= 0) ? rand_num : -rand_num);
 }
