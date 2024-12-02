@@ -24,6 +24,7 @@ void* simple_pthread(void* args) {
         ((struct s_thread_args*)args)->work--;
         printf("\nid=%c, work=%d", ((struct s_thread_args*)args)->id, ((struct s_thread_args*)args)->work);
         sem_post(&mutex);
+        sleep(1);
     }
     printf("\nThread ended... id=%c", ((struct s_thread_args*)args)->id);
     return NULL;
