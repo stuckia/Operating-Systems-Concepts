@@ -1,8 +1,11 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <unistd.h>
-#include <sys/random.h>
+#include <sys/syscall.h>
+#include <linux/random.h>
 
 sem_t mutex;
 
