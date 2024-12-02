@@ -32,7 +32,7 @@ void* simple_pthread(void* args) {
 // Name: Abby Stucki
 // Date: 12/2/2024
 // Description: 
-int main() {
+int main(int argc, char *argv[]) {
     srand(time(NULL));
 
     sem_init(&mutex, 0, 1);
