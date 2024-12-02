@@ -38,19 +38,20 @@ int main(int argc, char *argv[]) {
     sem_init(&mutex, 0, 1);
     pthread_t tA, tB, tC, tD, tE;
 
-    struct s_thread_args *tA_args = malloc(sizeof (struct s_thread_args));
+    struct s_thread_args default_args = {'A', 10};
+    struct s_thread_args *tA_args = malloc(sizeof(default_args));
     tA_args->id = 'A';
     tA_args->work = 10;
-    struct s_thread_args *tB_args = malloc(sizeof (struct s_thread_args));
+    struct s_thread_args *tB_args = malloc(sizeof(default_args));
     tB_args->id = 'B';
     tB_args->work = 10;
-    struct s_thread_args *tC_args = malloc(sizeof (struct s_thread_args));
+    struct s_thread_args *tC_args = malloc(sizeof(default_args));
     tC_args->id = 'C';
     tC_args->work = 10;
-    struct s_thread_args *tD_args = malloc(sizeof (struct s_thread_args));
+    struct s_thread_args *tD_args = malloc(sizeof(default_args));
     tD_args->id = 'D';
     tD_args->work = 10;
-    struct s_thread_args *tE_args = malloc(sizeof (struct s_thread_args));
+    struct s_thread_args *tE_args = malloc(sizeof(default_args));
     tE_args->id = 'E';
     tE_args->work = 10;
 
