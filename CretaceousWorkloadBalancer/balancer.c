@@ -12,7 +12,7 @@ sem_t mutex;
 typedef struct s_thread_args {
     char id;
     int work;
-} thread_args;
+} s_thread_args;
 
 // Name: Abby Stucki
 // Date: 12/2/2024
@@ -38,19 +38,19 @@ int main(int argc, char *argv[]) {
     sem_init(&mutex, 0, 1);
     pthread_t tA, tB, tC, tD, tE;
 
-    struct s_thread_args *tA_args;
+    struct s_thread_args *tA_args = malloc(sizeof (struct s_thread_args));
     tA_args->id = 'A';
     tA_args->work = 10;
-    struct s_thread_args *tB_args;
+    struct s_thread_args *tB_args = malloc(sizeof (struct s_thread_args));
     tB_args->id = 'B';
     tB_args->work = 10;
-    struct s_thread_args *tC_args;
+    struct s_thread_args *tC_args = malloc(sizeof (struct s_thread_args));
     tC_args->id = 'C';
     tC_args->work = 10;
-    struct s_thread_args *tD_args;
+    struct s_thread_args *tD_args = malloc(sizeof (struct s_thread_args));
     tD_args->id = 'D';
     tD_args->work = 10;
-    struct s_thread_args *tE_args;
+    struct s_thread_args *tE_args = malloc(sizeof (struct s_thread_args));
     tE_args->id = 'E';
     tE_args->work = 10;
 
