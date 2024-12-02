@@ -1,8 +1,8 @@
 #define _GNU_SOURCE
 
 #include <stdio.h>
-#include <linux/random.h>
-#include <sys/syscall.h>
+#include <stdlib.h>
+#include <time.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <unistd.h>
@@ -13,16 +13,6 @@ typedef struct s_thread_args {
     char id;
     int work;
 } thread_args;
-
-// Name: Abby
-// Date: 12/2/2024
-// Description: Generate random number within range of 0 to max
-static int get_rand(int max) {
-    int i, rand_num;
-    get_random_bytes(&i, sizeof(i));
-    rand_num = i % max;
-    return ((rand_num >= 0) ? rand_num : -rand_num);
-}
 
 // Name: Abby Stucki
 // Date: 12/2/2024
@@ -43,7 +33,7 @@ void* simple_pthread(void* args) {
 // Date: 12/2/2024
 // Description: 
 int main() {
-    printf("Testing %d", get_rand(3));
+    srand(time(NULL));
 
     sem_init(&mutex, 0, 1);
     pthread_t tA, tB, tC, tD, tE;
