@@ -8,28 +8,115 @@
 #include <unistd.h>
 
 sem_t mutex;
+sem_t semaphores[3];
 
-typedef struct s_thread_args {
+typedef struct {
     char id;
     int work;
 } s_thread_args;
 
 // Name: Abby Stucki
+// Date: 12/3/2024
+// Description: Return a random integer (inclusive) between lower and upper bound
+int get_rand_num(int lower_bound, int upper_bound) {
+    return rand() % (upper_bound - lower_bound + 1) + lower_bound;
+} 
+
+// Name: Abby Stucki
+// Date: 12/3/2024
+// Description: Sleep for a random amount of milliseconds (0-10ms)
+void rand_sleep(int milliseconds) {
+    struct timespec rem, req = {0, (rand() % (milliseconds + 1)) * 1000000};
+    nanosleep(&request, &remaining);
+}
+
+// Name: Abby Stucki
 // Date: 12/2/2024
 // Description: Pthreads wait for semaphore then subtract from 'work' field
 void* simple_pthread(void* args) {
-    printf("\nThread started... id=%c, work=%d", ((struct s_thread_args*)args)->id, ((struct s_thread_args*)args)->work);
-    while(((struct s_thread_args*)args)->work != 0) {
+    s_thread_args *current_args = (s_thread_args*)args;
+    printf("\nThread started... id=%c, work=%d", current_args->id, current_args->work);
+    while(current_args->work > 0) {
         sem_wait(&mutex);
-        ((struct s_thread_args*)args)->work--;
-        printf("\nid=%c, work=%d", ((struct s_thread_args*)args)->id, ((struct s_thread_args*)args)->work);
+        current_args->work--;
+        printf("\nid=%c, work=%d", current_args->id, current_args->work);
         sem_post(&mutex);
         sleep(1);
     }
-    printf("\nThread ended... id=%c", ((struct s_thread_args*)args)->id);
-    return NULL;
+    printf("\nThread ended... id=%c", current_args->id);
+    pthread_exit(NULL);
 }
 
+// Name: Abby Stucki
+// Date: 12/2/2024
+// Description:
+void* complex_pthread(void* args) {
+    s_thread_args *current_args = (s_thread_args*)args;
+    
+    printf("\nThread started... id=%c, work=%d", current_args->id, current_args->work);
+    while(current_args->work > 0) {
+        int num_of_sems = get_rand_num(1,3);
+        int req_sems[3];
+        for(int i=0; i<3; i++) {
+            req_sems[i] = 0;
+        }
+
+        int req = 0;
+        while(req < num_of_sems) {
+            int rand_sem = get_rand_num(0,2);
+            if(req_sems[rand_sem]) {
+                continue;
+            }
+            req_sems[rand_sem] = 1;
+            req++;
+        }
+
+        int held_sems[3] = {0,0,0};
+        int held = 0;
+
+        while (held < num_of_sems)
+        {
+            // try to grab required number of semaphores
+            for(int i=0; i<3; i++) {
+                if(req_sems[i] && sem_trywait(&semaphores[i])==0) {
+                    held_sems[i] = 1;
+                    held++;
+                    printf("\n%c>%d", current_args->id, i);
+                }
+            }
+
+            // if not enough semaphores obtained, post what is held then sleep
+            if(held != num_of_sems) {
+                for(int i=0; i<3; i++) {
+                    if(held_sems[i]) {
+                        held_sems[i] = 0;
+                        sem_post(&semaphores[i]);
+                        printf("\n%c<%d", current_args->id, i);
+                    }
+                }
+                held=0;
+                rand_sleep(10);
+            }
+        }
+
+        // critical section
+        printf("\n%c has %d left", current_args->id, current_args->work);
+        current_args->work--;
+        held=0;
+
+        // post held semaphores
+        for(int i=0; i<3; i++) {
+            if(held_sems[i]) {
+                held_sems[i] = 0;
+                sem_post(&semaphores[i]);
+                printf("\n%c<%d", current_args->id, i);
+            }
+        }
+        rand_sleep(10);
+    }
+
+    pthread_exit(NULL);
+}
 
 // Name: Abby Stucki
 // Date: 12/2/2024
@@ -37,38 +124,48 @@ void* simple_pthread(void* args) {
 int main(int argc, char *argv[]) {
     srand(time(NULL));
 
+    // initialize pid dictionary
+    char pid_dict[5] = {'A', 'B', 'C', 'D', 'E'};
+
+    // PHASE 1
+    printf("\n\nBeginning phase 1:");
+    pthread_t threads[5];
+    s_thread_args thread_args[5];
     sem_init(&mutex, 0, 1);
-    pthread_t tA, tB, tC, tD, tE;
 
-    struct s_thread_args default_args = {'A', 10};
-    struct s_thread_args *tA_args = malloc(sizeof(default_args));
-    tA_args->id = 'A';
-    tA_args->work = 10;
-    struct s_thread_args *tB_args = malloc(sizeof(default_args));
-    tB_args->id = 'B';
-    tB_args->work = 10;
-    struct s_thread_args *tC_args = malloc(sizeof(default_args));
-    tC_args->id = 'C';
-    tC_args->work = 10;
-    struct s_thread_args *tD_args = malloc(sizeof(default_args));
-    tD_args->id = 'D';
-    tD_args->work = 10;
-    struct s_thread_args *tE_args = malloc(sizeof(default_args));
-    tE_args->id = 'E';
-    tE_args->work = 10;
+    // reset threads
+    for(int i=0; i<5; i++) {
+        thread_args[i].id = pid_dict[i];
+        thread_args[i].work = 10;
+        pthread_create(&threads[i], NULL, simple_pthread, &thread_args[i]);
+    }
 
-    pthread_create(&tA, NULL, simple_pthread, (void *)tA_args);
-    pthread_create(&tB, NULL, simple_pthread, (void *)tB_args);
-    pthread_create(&tC, NULL, simple_pthread, (void *)tC_args);
-    pthread_create(&tD, NULL, simple_pthread, (void *)tD_args);
-    pthread_create(&tE, NULL, simple_pthread, (void *)tE_args);
-
-    pthread_join(tA, NULL);
-    pthread_join(tB, NULL);
-    pthread_join(tC, NULL);
-    pthread_join(tD, NULL);
-    pthread_join(tE, NULL);
+    for(int i=0; i<5; i++) {
+        pthread_join(threads[i], NULL);
+    }
 
     sem_destroy(&mutex);
+
+    // PHASE 2
+    printf("\n\nBeginning phase 2:");
+    for(int i=0; i<3; i++) {
+        sem_init(&semaphores[i], 0, 1);
+    }
+
+    // reset threads
+    for(int i=0; i<5; i++) {
+        thread_args[i].id = pid_dict[i];
+        thread_args[i].work = 10;
+        pthread_create(&threads[i], NULL, complex_pthread, &thread_args[i]);
+    }
+
+    for(int i=0; i<5; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    for(int i=0; i<3; i++) {
+        sem_destroy(&semaphores[i]);
+    }
+
     return 0;
 }
