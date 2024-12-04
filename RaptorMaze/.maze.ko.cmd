@@ -1,1 +1,0 @@
-cmd_/home/osc/COP4610/RaptorMaze/maze.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/osc/COP4610/RaptorMaze/maze.ko /home/osc/COP4610/RaptorMaze/maze.o /home/osc/COP4610/RaptorMaze/maze.mod.o
