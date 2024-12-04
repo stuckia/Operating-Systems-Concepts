@@ -27,7 +27,7 @@ int get_rand_num(int lower_bound, int upper_bound) {
 // Description: Sleep for a random amount of milliseconds (0-10ms)
 void rand_sleep(int milliseconds) {
     struct timespec rem, req = {0, (rand() % (milliseconds + 1)) * 1000000};
-    nanosleep(&request, &remaining);
+    nanosleep(&rem, &req);
 }
 
 // Name: Abby Stucki
