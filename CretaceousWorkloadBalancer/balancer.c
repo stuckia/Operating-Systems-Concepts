@@ -76,22 +76,24 @@ void* complex_pthread(void* args) {
 
         while (held < num_of_sems)
         {
+            printf("\n");
             // try to grab required number of semaphores
             for(int i=0; i<3; i++) {
                 if(req_sems[i] && sem_trywait(&semaphores[i])==0) {
                     held_sems[i] = 1;
                     held++;
-                    printf("\n%c>%d", current_args->id, i);
+                    printf("%c>%d ", current_args->id, i);
                 }
             }
 
             // if not enough semaphores obtained, post what is held then sleep
             if(held != num_of_sems) {
+                printf("\n");
                 for(int i=0; i<3; i++) {
                     if(held_sems[i]) {
                         held_sems[i] = 0;
                         sem_post(&semaphores[i]);
-                        printf("\n%c<%d", current_args->id, i);
+                        printf("%c<%d ", current_args->id, i);
                     }
                 }
                 held=0;
@@ -105,11 +107,12 @@ void* complex_pthread(void* args) {
         held=0;
 
         // post held semaphores
+        printf("\n");
         for(int i=0; i<3; i++) {
             if(held_sems[i]) {
                 held_sems[i] = 0;
                 sem_post(&semaphores[i]);
-                printf("\n%c<%d", current_args->id, i);
+                printf("%c<%d ", current_args->id, i);
             }
         }
         rand_sleep(10);
