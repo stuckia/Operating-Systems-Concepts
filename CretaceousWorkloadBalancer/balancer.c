@@ -89,7 +89,6 @@ void* complex_pthread(void* args) {
             if(held != num_of_sems) {
                 for(int i=0; i<3; i++) {
                     if(held_sems[i]) {
-                        printf("\n");
                         held_sems[i] = 0;
                         sem_post(&semaphores[i]);
                         printf("%c<%d ", current_args->id, i);
@@ -108,7 +107,6 @@ void* complex_pthread(void* args) {
         // post held semaphores
         for(int i=0; i<3; i++) {
             if(held_sems[i]) {
-                printf("\n");
                 held_sems[i] = 0;
                 sem_post(&semaphores[i]);
                 printf("%c<%d ", current_args->id, i);
