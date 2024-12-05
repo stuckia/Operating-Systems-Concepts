@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g -lpthread -lrt -o
+CFLAGS = -Wall -g -pthread -lrt -o
 RM = rm -f
 
 workload_balancer: balancer.c
