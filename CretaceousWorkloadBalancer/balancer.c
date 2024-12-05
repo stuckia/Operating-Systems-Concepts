@@ -35,15 +35,15 @@ void rand_sleep(int milliseconds) {
 // Description: Pthreads wait for semaphore then subtract from 'work' field
 void* simple_pthread(void* args) {
     s_thread_args *current_args = (s_thread_args*)args;
-    printf("Thread started... id=%c, work=%d\n", current_args->id, current_args->work);
+    printf("\nThread started... id=%c, work=%d", current_args->id, current_args->work);
     while(current_args->work > 0) {
         sem_wait(&mutex);
         current_args->work--;
-        printf("id=%c, work=%d\n", current_args->id, current_args->work);
+        printf("\nid=%c, work=%d", current_args->id, current_args->work);
         sem_post(&mutex);
         sleep(1);
     }
-    printf("Thread ended... id=%c\n", current_args->id);
+    printf("\nThread ended... id=%c", current_args->id);
     pthread_exit(NULL);
 }
 
@@ -53,7 +53,7 @@ void* simple_pthread(void* args) {
 void* complex_pthread(void* args) {
     s_thread_args *current_args = (s_thread_args*)args;
     
-    printf("Thread started... id=%c, work=%d\n", current_args->id, current_args->work);
+    printf("\nThread started... id=%c, work=%d", current_args->id, current_args->work);
     while(current_args->work > 0) {
         int num_of_sems = get_rand_num(1,3);
         int req_sems[3];
@@ -81,7 +81,7 @@ void* complex_pthread(void* args) {
                 if(req_sems[i] && sem_trywait(&semaphores[i])==0) {
                     held_sems[i] = 1;
                     held++;
-                    printf("%c>%d ", current_args->id, i);
+                    printf("\n%c>%d", current_args->id, i);
                 }
             }
 
@@ -91,7 +91,7 @@ void* complex_pthread(void* args) {
                     if(held_sems[i]) {
                         held_sems[i] = 0;
                         sem_post(&semaphores[i]);
-                        printf("%c<%d ", current_args->id, i);
+                        printf("\n%c<%d", current_args->id, i);
                     }
                 }
                 held=0;
@@ -100,7 +100,7 @@ void* complex_pthread(void* args) {
         }
 
         // critical section
-        printf("\n%c has %d left\n", current_args->id, current_args->work);
+        printf("\n%c has %d left", current_args->id, current_args->work);
         current_args->work--;
         held=0;
 
@@ -109,7 +109,7 @@ void* complex_pthread(void* args) {
             if(held_sems[i]) {
                 held_sems[i] = 0;
                 sem_post(&semaphores[i]);
-                printf("%c<%d ", current_args->id, i);
+                printf("\n%c<%d", current_args->id, i);
             }
         }
         rand_sleep(10);
@@ -126,12 +126,9 @@ int main(int argc, char *argv[]) {
 
     // initialize pid dictionary
     char pid_dict[5] = {'A', 'B', 'C', 'D', 'E'};
-    pthread_t threads[5];
-    s_thread_args thread_args[5];
 
     // PHASE 1
-    /*
-    printf("Beginning phase 1:\n");
+    printf("\n\nBeginning phase 1:");
     pthread_t threads[5];
     s_thread_args thread_args[5];
     sem_init(&mutex, 0, 1);
@@ -148,10 +145,9 @@ int main(int argc, char *argv[]) {
     }
 
     sem_destroy(&mutex);
-    */
 
     // PHASE 2
-    printf("\nBeginning phase 2:\n");
+    printf("\n\nBeginning phase 2:");
     for(int i=0; i<3; i++) {
         sem_init(&semaphores[i], 0, 1);
     }
