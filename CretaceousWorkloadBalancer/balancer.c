@@ -88,8 +88,6 @@ void* complex_pthread(void* args) {
                 }
             }
 
-            rand_sleep(10);
-
             // if not enough semaphores obtained, post what is held then sleep
             if(held != num_of_sems) {
                 for(int i=0; i<3; i++) {
@@ -100,6 +98,7 @@ void* complex_pthread(void* args) {
                     }
                 }
                 held=0;
+                rand_sleep(10);
             }
         }
 
