@@ -126,8 +126,11 @@ int main(int argc, char *argv[]) {
 
     // initialize pid dictionary
     char pid_dict[5] = {'A', 'B', 'C', 'D', 'E'};
+    pthread_t threads[5];
+    s_thread_args thread_args[5];
 
     // PHASE 1
+    /*
     printf("Beginning phase 1:\n");
     pthread_t threads[5];
     s_thread_args thread_args[5];
@@ -145,6 +148,7 @@ int main(int argc, char *argv[]) {
     }
 
     sem_destroy(&mutex);
+    */
 
     // PHASE 2
     printf("\nBeginning phase 2:\n");
