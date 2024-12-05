@@ -124,13 +124,14 @@ void* complex_pthread(void* args) {
 int main(int argc, char *argv[]) {
     srand(time(NULL));
 
-    // initialize pid dictionary
+    // initialize pid dictionary, threads, thread_args
     char pid_dict[5] = {'A', 'B', 'C', 'D', 'E'};
-
-    // PHASE 1
-    printf("\n\nBeginning phase 1:");
     pthread_t threads[5];
     s_thread_args thread_args[5];
+
+    // PHASE 1
+    /*
+    printf("\n\nBeginning phase 1:");
     sem_init(&mutex, 0, 1);
 
     // reset threads
@@ -145,6 +146,7 @@ int main(int argc, char *argv[]) {
     }
 
     sem_destroy(&mutex);
+    */
 
     // PHASE 2
     printf("\n\nBeginning phase 2:");
