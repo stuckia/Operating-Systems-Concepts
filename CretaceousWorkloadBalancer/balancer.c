@@ -27,7 +27,7 @@ int get_rand_num(int lower_bound, int upper_bound) {
 // Description: Sleep for a random amount of milliseconds (0-10ms)
 void rand_sleep(int milliseconds) {
     struct timespec rem, req = {0, (rand() % (milliseconds + 1)) * 1000000};
-    nanosleep(&rem, &req);
+    nanosleep(&req, &rem);
 }
 
 // Name: Abby Stucki
@@ -71,7 +71,10 @@ void* complex_pthread(void* args) {
             req++;
         }
 
-        int held_sems[3] = {0,0,0};
+        int held_sems[3];
+        for(int i=0; i<3; i++) {
+            held_sems[i] = 0;
+        }
         int held = 0;
 
         while (held < num_of_sems)
@@ -103,9 +106,8 @@ void* complex_pthread(void* args) {
         // critical section
         printf("\n%c has %d left", current_args->id, current_args->work);
         current_args->work--;
-        held=0;
-        
         rand_sleep(10);
+        held=0;
 
         // post held semaphores
         for(int i=0; i<3; i++) {
