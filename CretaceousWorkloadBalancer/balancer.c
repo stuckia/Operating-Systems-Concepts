@@ -98,14 +98,14 @@ void* complex_pthread(void* args) {
                     }
                 }
                 held=0;
-                rand_sleep(10);
+                //rand_sleep(10);
             }
         }
 
         // critical section
         printf("\n%c has %d left", current_args->id, current_args->work);
         current_args->work--;
-        rand_sleep(10);
+        //rand_sleep(10);
         held=0;
 
         // post held semaphores
