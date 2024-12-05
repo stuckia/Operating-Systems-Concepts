@@ -1,0 +1,6 @@
+Running the balancer without the nano-sleep reduced the amount of fighting for control of the semaphores.
+Rather than threads all reaching for semaphores at once, the output demonstrates a sequential process of executing one thread at a time.
+This is a direct result of there being no break between threads when they post semaphores and loop back around to trywait.
+When switching between threads, it is easier for the last "focused" thread to reach control of the semaphores because the memory address was most recently accessed.
+While it is a miniscule amount of time to a human, that time difference is enough to allow that thread to continue to retrieve the semaphores before the other threads get the opportunity, sending them into a cycle of waiting their turns.
+Nanosleep is vital to ensure that each thread gets the opportunity to retrieve or attempt retrieval of resources.
